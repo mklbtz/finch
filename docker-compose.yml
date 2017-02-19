@@ -1,0 +1,9 @@
+version: '2'
+services:
+    app:
+        image: swift
+        entrypoint: [swift]
+        privileged: true # REPL requires debug privileges
+        working_dir: /usr/src
+        volumes:
+            - .:/usr/src
