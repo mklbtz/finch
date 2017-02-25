@@ -1,5 +1,4 @@
-struct Task {
- let id: Int
- let title: String
+public struct Task {
+ public let id: Int
+ public let title: String
 }
-
