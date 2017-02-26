@@ -1,9 +1,20 @@
 import Foundation
 import Commander
+import Yams
 
 let main = Group {
   $0.command("add") { (title: String) in
-    print("Added task: 1. \(title)")
+    // print("Added task: 1. \(title)")
+    let task = Task(id: 0, title: title)
+    do {
+      guard let yaml = try? dump(object: task),
+            let data = yaml.data(using: .utf8)
+      else { return print("Could not encode data") }
+      try DataManager().write(data: data)
+      print(yaml)
+    } catch let error {
+      print(error)
+    }
   }
 
   $0.command("rm") { (id: Int) in
@@ -18,7 +29,7 @@ let main = Group {
     let manager = DataManager()
     do {
       let data = try manager.read()
-      print("Read data: ", data)
+      print("Read data:", data)
     } catch let error {
       print(error)
     }
