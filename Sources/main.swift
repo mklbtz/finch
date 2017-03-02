@@ -27,9 +27,9 @@ Group {
   }
 
   $0.command("read") {
-    let manager = DataFile(at: YamlFile.defaultFilePath)
+    let file = DataFile(at: YamlFile.defaultFilePath)
     do {
-      let data = try manager.read()
+      let data = try file.read()
       print("Read data:", data)
     }
     catch let error {
@@ -38,9 +38,9 @@ Group {
   }
 
   $0.command("write") {
-    let manager = DataFile(at: YamlFile.defaultFilePath)
+    let file = DataFile(at: YamlFile.defaultFilePath)
     let data = Data(bytes: [1,2,3,4,5])
-    do { try manager.write(data: data) }
+    do { try file.write(data: data) }
     catch let error { print(error) }
   }
 }.run()

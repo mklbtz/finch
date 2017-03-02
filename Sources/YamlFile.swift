@@ -2,20 +2,20 @@ import Foundation
 import Yams
 
 public struct YamlFile {
-  fileprivate let manager: DataFile
+  fileprivate let file: DataFile
 
   public init(at path: String) {
-    self.manager = DataFile(at: path)
+    self.file = DataFile(at: path)
   }
 
   public var path: String {
-    return manager.path
+    return file.path
   }
 }
 
 extension YamlFile {
   public func read() throws -> String {
-    let data = try manager.read()
+    let data = try file.read()
     guard let yaml = String(data: data, encoding: .utf8)
     else { throw "Could not decode data \(data)" }
     return yaml
@@ -24,7 +24,7 @@ extension YamlFile {
 
   public func write(yaml: String) throws {
     let data = yaml.data(using: .utf8)!
-    try manager.write(data: data)
+    try file.write(data: data)
   }
 }
 
