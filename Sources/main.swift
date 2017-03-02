@@ -5,7 +5,7 @@ import Yams
 Group {
   $0.command("add") { (title: String) in
     let task = Task(id: 0, title: title)
-    let yaml = try YamlManager.default.write(object: [task])
+    let yaml = try YamlFile.default.write(object: [task])
     print(yaml)
   }
 
@@ -19,7 +19,7 @@ Group {
   }
 
   $0.command("ls") {
-    let sequence: Any = try YamlManager.default.readAny()
+    let sequence: Any = try YamlFile.default.readAny()
     print(sequence)
     // for node in sequence {
     //   print(node)
@@ -27,7 +27,7 @@ Group {
   }
 
   $0.command("read") {
-    let manager = DataFile(at: YamlManager.defaultFilePath)
+    let manager = DataFile(at: YamlFile.defaultFilePath)
     do {
       let data = try manager.read()
       print("Read data:", data)
@@ -38,7 +38,7 @@ Group {
   }
 
   $0.command("write") {
-    let manager = DataFile(at: YamlManager.defaultFilePath)
+    let manager = DataFile(at: YamlFile.defaultFilePath)
     let data = Data(bytes: [1,2,3,4,5])
     do { try manager.write(data: data) }
     catch let error { print(error) }

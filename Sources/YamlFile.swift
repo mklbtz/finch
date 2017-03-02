@@ -1,19 +1,19 @@
 import Foundation
 import Yams
 
-public struct YamlManager {
+public struct YamlFile {
   fileprivate let manager: DataFile
 
-  public init(filePath: String) {
-    self.manager = DataFile(at: filePath)
+  public init(at path: String) {
+    self.manager = DataFile(at: path)
   }
 
-  public var filePath: String {
+  public var path: String {
     return manager.path
   }
 }
 
-extension YamlManager {
+extension YamlFile {
   public func read() throws -> String {
     let data = try manager.read()
     guard let yaml = String(data: data, encoding: .utf8)
@@ -28,7 +28,7 @@ extension YamlManager {
   }
 }
 
-extension YamlManager {
+extension YamlFile {
   public func readAny() throws -> Any {
     return try load(yaml: read()) as Any
   }
@@ -41,8 +41,8 @@ extension YamlManager {
   }
 }
 
-extension YamlManager {
-  public static var `default` = YamlManager(filePath: defaultFilePath)
+extension YamlFile {
+  public static var `default` = YamlFile(at: defaultFilePath)
 
   public static var defaultFilePath: String {
     return FileManager.default.currentDirectoryPath + "/.todo"
