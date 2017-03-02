@@ -12,6 +12,6 @@ extension Task: NodeRepresentable {
       "id": id,
       "title": title,
       "done": done
-      ].represented()
+    ].represented()
   }
 }
