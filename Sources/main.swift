@@ -27,7 +27,7 @@ Group {
   }
 
   $0.command("read") {
-    let manager = DataManager(dataPath: YamlManager.defaultFilePath)
+    let manager = DataFile(at: YamlManager.defaultFilePath)
     do {
       let data = try manager.read()
       print("Read data:", data)
@@ -38,7 +38,7 @@ Group {
   }
 
   $0.command("write") {
-    let manager = DataManager(dataPath: YamlManager.defaultFilePath)
+    let manager = DataFile(at: YamlManager.defaultFilePath)
     let data = Data(bytes: [1,2,3,4,5])
     do { try manager.write(data: data) }
     catch let error { print(error) }

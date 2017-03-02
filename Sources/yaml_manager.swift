@@ -2,14 +2,14 @@ import Foundation
 import Yams
 
 public struct YamlManager {
-  fileprivate let manager: DataManager
+  fileprivate let manager: DataFile
 
   public init(filePath: String) {
-    self.manager = DataManager(dataPath: filePath)
+    self.manager = DataFile(at: filePath)
   }
 
   public var filePath: String {
-    return manager.dataPath
+    return manager.path
   }
 }
 
