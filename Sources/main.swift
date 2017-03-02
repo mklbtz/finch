@@ -1,46 +1,46 @@
-import Foundation
 import Commander
+import Foundation
 import Yams
 
-let main = Group {
+Group {
   $0.command("add") { (title: String) in
-    // print("Added task: 1. \(title)")
     let task = Task(id: 0, title: title)
-    do {
-      guard let yaml = try? dump(object: task),
-            let data = yaml.data(using: .utf8)
-      else { return print("Could not encode data") }
-      try DataManager().write(data: data)
-      print(yaml)
-    } catch let error {
-      print(error)
-    }
+    let yaml = try YamlManager.default.write(object: [task])
+    print(yaml)
   }
 
   $0.command("rm") { (id: Int) in
     if id == 1 {
       print("Removed task 1.")
-    } else {
+    }
+    else {
       print("No task 1.")
     }
   }
 
+  $0.command("ls") {
+    let sequence: Any = try YamlManager.default.readAny()
+    print(sequence)
+    // for node in sequence {
+    //   print(node)
+    // }
+  }
+
   $0.command("read") {
-    let manager = DataManager()
+    let manager = DataManager(dataPath: YamlManager.defaultFilePath)
     do {
       let data = try manager.read()
       print("Read data:", data)
-    } catch let error {
+    }
+    catch let error {
       print(error)
     }
   }
 
   $0.command("write") {
-    let manager = DataManager()
+    let manager = DataManager(dataPath: YamlManager.defaultFilePath)
     let data = Data(bytes: [1,2,3,4,5])
     do { try manager.write(data: data) }
     catch let error { print(error) }
   }
-}
-
-main.run()
+}.run()
