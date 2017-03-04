@@ -8,35 +8,36 @@ func readAllLines() -> AnyIterator<String> {
 
 Group { root in
   root.command("add") { (title: String) in
-    let task = Task(id: 0, title: title)
-    let yaml = try ObjectStore.default.write(objects: [task])
-    print(yaml)
+    var taskList = try TaskStore.default.load()
+    let task = Task(id: taskList.count, title: title)
+    taskList.append(task)
+    dump(task)
+    try TaskStore.default.save(taskList)
   }
 
   root.command("rm") { (id: Int) in
-    if id == 1 {
-      print("Removed task 1.")
-    }
-    else {
-      print("No task 1.")
-    }
+    var taskList = try TaskStore.default.load()
+    guard let index = taskList.index(where: { $0.id == id })
+    else { exit(1) }
+
+    let removed = taskList.remove(at: index)
+    dump(removed)
+    try TaskStore.default.save(taskList)
   }
 
   root.command("ls") {
-    let objects: [Node] = try ObjectStore.default.read()
-    for (index, node) in objects.enumerated() {
-      print("\(index): \(node)")
-    }
+    let taskList = try TaskStore.default.load()
+    dump(taskList)
   }
 
   root.group("yaml") { group in
     group.command("read") {
-      let file = YamlFile(at: ObjectStore.defaultFilePath)
+      let file = YamlFile(at: TaskStore.defaultFilePath)
       print(try file.read())
     }
 
     group.command("write") {
-      let file = YamlFile(at: ObjectStore.defaultFilePath)
+      let file = YamlFile(at: TaskStore.defaultFilePath)
       let yaml = readAllLines().joined()
       try file.write(yaml: yaml)
     }

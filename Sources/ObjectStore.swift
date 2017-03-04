@@ -1,4 +1,3 @@
-import Foundation
 import Yams
 
 /// Provides access to a yaml file of NodeRepresentable objects.
@@ -14,19 +13,10 @@ public struct ObjectStore {
   }
 }
 
-// Default Store and Location
-extension ObjectStore {
-  public static var `default` = ObjectStore(at: defaultFilePath)
-
-  public static var defaultFilePath: String {
-    return FileManager.default.currentDirectoryPath + "/.todo"
-  }
-}
-
 // Reading and Writing NodeRepresentable Objects
 extension ObjectStore {
-  public func read() throws -> [Node] {
-    let node = try load(yaml: file.read()).represented()
+  public func load() throws -> [Node] {
+    let node = try Yams.load(yaml: file.read()).represented()
     switch node {
     case .sequence(let nodeList, _, _):
       return nodeList
@@ -36,8 +26,8 @@ extension ObjectStore {
   }
 
   @discardableResult
-  public func write<T: NodeRepresentable>(objects: [T]) throws -> String {
-    let yaml = try dump(object: objects.represented())
+  public func save<T: NodeRepresentable>(_ objects: [T]) throws -> String {
+    let yaml = try Yams.dump(object: objects.represented())
     try file.write(yaml: yaml)
     return yaml
   }

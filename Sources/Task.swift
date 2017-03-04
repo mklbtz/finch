@@ -2,8 +2,14 @@ import Yams
 
 public struct Task {
   public let id: Int
-  public let title: String
-  public let done: Bool = false
+  public var title: String
+  public var done: Bool = false
+
+  public init(id: Int, title: String, done: Bool = false) {
+    self.id = id
+    self.title = title
+    self.done = done
+  }
 }
 
 extension Task: NodeRepresentable {
@@ -13,5 +19,13 @@ extension Task: NodeRepresentable {
       "title": title,
       "done": done
     ].represented()
+  }
+
+  public init?(from node: Node) {
+    guard let id = node["id"]?.int,
+          let title = node["title"]?.string,
+          let done = node["done"]?.bool
+    else { return nil }
+    self.init(id: id, title: title, done: done)
   }
 }
