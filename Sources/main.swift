@@ -8,38 +8,49 @@ func readAllLines() -> AnyIterator<String> {
 
 Group { root in
   root.command("add") { (title: String) in
-    var taskList = try TaskStore.default.load()
+    var taskList = try taskListFile.read()
     let task = Task(id: taskList.count, title: title)
     taskList.append(task)
     dump(task)
-    try TaskStore.default.save(taskList)
+    try taskListFile.write(taskList)
   }
 
   root.command("rm") { (id: Int) in
-    var taskList = try TaskStore.default.load()
+    var taskList = try taskListFile.read()
     guard let index = taskList.index(where: { $0.id == id })
     else { exit(1) }
 
     let removed = taskList.remove(at: index)
     dump(removed)
-    try TaskStore.default.save(taskList)
+    try taskListFile.write(taskList)
   }
 
   root.command("ls") {
-    let taskList = try TaskStore.default.load()
+    let taskList = try taskListFile.read()
     dump(taskList)
+  }
+
+  root.command("fin") { (id: Int) in
+    var taskList = try taskListFile.read()
+    guard let index = taskList.index(where: { $0.id == id })
+    else { exit(1) }
+
+    var task = taskList[index]
+    task.done = true
+    dump(task)
+
+    taskList[index] = task
+    try taskListFile.write(taskList)
   }
 
   root.group("yaml") { group in
     group.command("read") {
-      let file = YamlFile(at: TaskStore.defaultFilePath)
-      print(try file.read())
+      print(try todoYamlFile.read())
     }
 
     group.command("write") {
-      let file = YamlFile(at: TaskStore.defaultFilePath)
       let yaml = readAllLines().joined()
-      try file.write(yaml: yaml)
+      try todoYamlFile.write(yaml)
     }
   }
 }.run()
