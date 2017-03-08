@@ -1,5 +1,6 @@
 import Commander
 import Foundation
+import TaskManagement
 import Yams
 
 func readAllLines() -> AnyIterator<String> {
@@ -9,43 +10,39 @@ func readAllLines() -> AnyIterator<String> {
 Group { root in
   root.command("add") { (title: String) in
     var taskList = try taskListFile.read()
-    let task = Task(id: taskList.count, title: title)
+    let id = taskList.nextId()
+    let task = Task(id: id, title: title)
     taskList.append(task)
-    dump(task)
     try taskListFile.write(taskList)
+    TaskFormatter(task).print()
   }
 
   root.command("rm") { (id: Int) in
     var taskList = try taskListFile.read()
-    guard let index = taskList.index(where: { $0.id == id })
-    else { exit(1) }
-
-    let removed = taskList.remove(at: index)
-    dump(removed)
+    let task = try taskList.remove(id: id)
     try taskListFile.write(taskList)
+    TaskFormatter(task).print()
   }
 
   root.command("ls") {
     let taskList = try taskListFile.read()
-    dump(taskList)
+    for task in taskList {
+      TaskFormatter(task).print()
+    }
   }
 
-  root.command("fin") { (id: Int) in
+  root.command("done") { (id: Int) in
     var taskList = try taskListFile.read()
-    guard let index = taskList.index(where: { $0.id == id })
-    else { exit(1) }
-
-    var task = taskList[index]
-    task.done = true
-    dump(task)
-
-    taskList[index] = task
+    try taskList.update(id: id) { task in
+      task.done = true
+      TaskFormatter(task).print()
+    }
     try taskListFile.write(taskList)
   }
 
   root.group("yaml") { group in
     group.command("read") {
-      print(try todoYamlFile.read())
+      try todoYamlFile.read().print()
     }
 
     group.command("write") {
