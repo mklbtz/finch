@@ -29,3 +29,9 @@ extension Task: NodeRepresentable {
     self.init(id: id, title: title, done: done)
   }
 }
+
+extension Task: Equatable {
+  public static func ==(lhs: Task, rhs: Task) -> Bool {
+    return lhs.id == rhs.id && lhs.title == rhs.title && lhs.done == rhs.done
+  }
+}

@@ -14,20 +14,20 @@ Group { root in
     let task = Task(id: id, title: title)
     taskList.append(task)
     try taskListFile.write(taskList)
-    TaskFormatter(task).print()
+    TaskFormatter(for: task).print()
   }
 
   root.command("rm") { (id: Int) in
     var taskList = try taskListFile.read()
     let task = try taskList.remove(id: id)
     try taskListFile.write(taskList)
-    TaskFormatter(task).print()
+    TaskFormatter(for: task).print()
   }
 
   root.command("ls") {
     let taskList = try taskListFile.read()
     for task in taskList {
-      TaskFormatter(task).print()
+      TaskFormatter(for: task).print()
     }
   }
 
@@ -35,7 +35,7 @@ Group { root in
     var taskList = try taskListFile.read()
     try taskList.update(id: id) { task in
       task.done = true
-      TaskFormatter(task).print()
+      TaskFormatter(for: task).print()
     }
     try taskListFile.write(taskList)
   }

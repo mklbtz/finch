@@ -1,8 +1,8 @@
-public struct TaskFormatter{
+public struct TaskFormatter {
   let task: Task
-  let padCount: Int
+  let padCount: UInt
 
-  public init(_ task: Task, padding padCount: Int = 0) {
+  public init(for task: Task, padding padCount: UInt = 0) {
     self.task = task
     self.padCount = padCount
   }
@@ -30,7 +30,7 @@ extension TaskFormatter: CustomStringConvertible {
   }
 
   private var padding: String {
-    return String(repeating: " ", count: padCount)
+    return String(repeating: " ", count: Int(padCount))
   }
 
   private var checkmark: String { return " ✓ " }
