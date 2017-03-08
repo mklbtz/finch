@@ -11,17 +11,20 @@ public let todoYamlFile =
 public let todoNodeFile =
   FileTransform(file: todoYamlFile,
                 reader: { string in
-                  let node = try Yams.load(yaml: string).represented()
-                  if case .sequence(let nodeList, _, _) = node {
+                  let node = try? Yams.load(yaml: string).represented()
+                  if case .sequence(let nodeList, _, _)? = node {
                     return nodeList
-                  } else {
-                    throw "Expected sequence but got: \(node)"
+                  }
+                  else if case .scalar(let value, _, _)? = node, value == "null" {
+                    return []
+                  }
+                  else {
+                    throw "Couldn't turn YAML into node list: \(node)"
                   }
                 },
                 writer: { (nodeList: [Node]) in
                   try Yams.dump(object: nodeList.represented())
                 })
-
 
 public let taskListFile =
   FileTransform(file: todoNodeFile,
