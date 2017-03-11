@@ -7,7 +7,15 @@ func readAllLines() -> AnyIterator<String> {
   return AnyIterator { return readLine(strippingNewline: false) }
 }
 
-Group { root in
+DefaultableGroup {
+  let root = $0 as! DefaultableGroup
+
+  root.defaultCommand {
+    let taskList = try taskListFile.read()
+    for task in taskList {
+      TaskFormatter(for: task).print()
+    }
+  }
   root.command("add") { (title: String) in
     var taskList = try taskListFile.read()
     let id = taskList.nextId()
