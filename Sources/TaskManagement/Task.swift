@@ -14,17 +14,31 @@ public struct Task {
 
 extension Task: NodeRepresentable {
   public func represented() throws -> Node {
-    return try [
-      "id": id,
-      "title": title,
-      "done": done
-    ].represented()
+    return try jsonObject().represented()
   }
 
   public init?(from node: Node) {
     guard let id = node["id"]?.int,
           let title = node["title"]?.string,
           let done = node["done"]?.bool
+    else { return nil }
+    self.init(id: id, title: title, done: done)
+  }
+}
+
+extension Task {
+  public func jsonObject() -> [String:Any] {
+    return [
+      "id": id,
+      "title": title,
+      "done": done
+    ]
+  }
+
+  public init?(from json: [String:Any]) {
+    guard let id = json["id"] as? Int,
+          let title = json["title"] as? String,
+          let done = json["done"] as? Bool
     else { return nil }
     self.init(id: id, title: title, done: done)
   }
