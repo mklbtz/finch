@@ -5,5 +5,5 @@
 /Packages
 /*.xcodeproj
 *.swp
-.todo
+.todo*
 /todo
