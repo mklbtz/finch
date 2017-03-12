@@ -1,5 +1,3 @@
-import Yams
-
 public struct Task {
   public let id: Int
   public var title: String
@@ -9,20 +7,6 @@ public struct Task {
     self.id = id
     self.title = title
     self.done = done
-  }
-}
-
-extension Task: NodeRepresentable {
-  public func represented() throws -> Node {
-    return try jsonObject().represented()
-  }
-
-  public init?(from node: Node) {
-    guard let id = node["id"]?.int,
-          let title = node["title"]?.string,
-          let done = node["done"]?.bool
-    else { return nil }
-    self.init(id: id, title: title, done: done)
   }
 }
 
