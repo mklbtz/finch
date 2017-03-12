@@ -32,7 +32,7 @@ extension File {
 }
 
 extension File {
-  enum Error: Swift.Error {
+  public enum Error: Swift.Error {
     case couldNotCreate(File)
     case couldNotRead(File)
   }
