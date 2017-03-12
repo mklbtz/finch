@@ -1,7 +1,6 @@
 import Commander
 import Foundation
 import TaskManagement
-import Yams
 
 func readAllLines() -> AnyIterator<String> {
   return AnyIterator { return readLine(strippingNewline: false) }
@@ -11,7 +10,7 @@ DefaultableGroup {
   let root = $0 as! DefaultableGroup
 
   root.defaultCommand {
-    let taskList = try taskJSONStorage().load()
+    let taskList = try taskStorage().load()
     for task in taskList {
       TaskFormatter(for: task).print()
     }
@@ -19,33 +18,33 @@ DefaultableGroup {
   root.command("add") { (title: String) in
     var taskList: [Task]
     do {
-      taskList = try taskJSONStorage().load()
+      taskList = try taskStorage().load()
     } catch File.Error.couldNotRead(_) {
       taskList = []
     }
     let id = taskList.nextId()
     let task = Task(id: id, title: title)
     taskList.append(task)
-    try taskJSONStorage().save(taskList)
+    try taskStorage().save(taskList)
     TaskFormatter(for: task).print()
   }
 
   root.command("rm") { (id: Int) in
     var taskList: [Task]
     do {
-      taskList = try taskJSONStorage().load()
+      taskList = try taskStorage().load()
     } catch File.Error.couldNotRead(_) {
       taskList = []
     }
     let task = try taskList.remove(id: id)
-    try taskJSONStorage().save(taskList)
+    try taskStorage().save(taskList)
     TaskFormatter(for: task).print()
   }
 
   root.command("ls") {
     let taskList: [Task]
     do {
-      taskList = try taskJSONStorage().load()
+      taskList = try taskStorage().load()
     } catch File.Error.couldNotRead(_) {
       taskList = []
     }
@@ -58,7 +57,7 @@ DefaultableGroup {
   root.command("done") { (id: Int) in
     var taskList: [Task]
     do {
-      taskList = try taskJSONStorage().load()
+      taskList = try taskStorage().load()
     } catch File.Error.couldNotRead(_) {
       taskList = []
     }
@@ -66,25 +65,10 @@ DefaultableGroup {
       task.done = true
       TaskFormatter(for: task).print()
     }
-    try taskJSONStorage().save(taskList)
+    try taskStorage().save(taskList)
   }
 
-  root.group("yaml") { group in
-    var yamlStorage: StringStorage {
-      return stringStorage(atPath: ".todo")
-    }
-
-    group.command("read") {
-      try yamlStorage.load().print()
-    }
-
-    group.command("write") {
-      let input = readAllLines().joined()
-      try yamlStorage.save(input)
-    }
-  }
-
-  root.group("json") { group in
+  root.group("file") { group in
     var jsonStorage: StringStorage {
       return stringStorage(atPath: ".todo.json")
     }
