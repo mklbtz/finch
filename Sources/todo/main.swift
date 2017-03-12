@@ -11,54 +11,91 @@ DefaultableGroup {
   let root = $0 as! DefaultableGroup
 
   root.defaultCommand {
-    let taskList = try taskStorage().load()
+    let taskList = try taskJSONStorage().load()
     for task in taskList {
       TaskFormatter(for: task).print()
     }
   }
   root.command("add") { (title: String) in
-    var taskList = try taskStorage().load()
+    var taskList: [Task]
+    do {
+      taskList = try taskJSONStorage().load()
+    } catch File.Error.couldNotRead(_) {
+      taskList = []
+    }
     let id = taskList.nextId()
     let task = Task(id: id, title: title)
     taskList.append(task)
-    try taskStorage().save(taskList)
+    try taskJSONStorage().save(taskList)
     TaskFormatter(for: task).print()
   }
 
   root.command("rm") { (id: Int) in
-    var taskList = try taskStorage().load()
+    var taskList: [Task]
+    do {
+      taskList = try taskJSONStorage().load()
+    } catch File.Error.couldNotRead(_) {
+      taskList = []
+    }
     let task = try taskList.remove(id: id)
-    try taskStorage().save(taskList)
+    try taskJSONStorage().save(taskList)
     TaskFormatter(for: task).print()
   }
 
   root.command("ls") {
-    let taskList = try taskStorage().load()
+    let taskList: [Task]
+    do {
+      taskList = try taskJSONStorage().load()
+    } catch File.Error.couldNotRead(_) {
+      taskList = []
+    }
+
     for task in taskList {
       TaskFormatter(for: task).print()
     }
   }
 
   root.command("done") { (id: Int) in
-    var taskList = try taskStorage().load()
+    var taskList: [Task]
+    do {
+      taskList = try taskJSONStorage().load()
+    } catch File.Error.couldNotRead(_) {
+      taskList = []
+    }
     try taskList.update(id: id) { task in
       task.done = true
       TaskFormatter(for: task).print()
     }
-    try taskStorage().save(taskList)
+    try taskJSONStorage().save(taskList)
   }
 
-  root.group("file") { group in
-    var yamlFile: YamlStorage {
-      return yamlStorage(atPath: ".todo")
+  root.group("yaml") { group in
+    var yamlStorage: StringStorage {
+      return stringStorage(atPath: ".todo")
     }
+
     group.command("read") {
-      try yamlFile.load().print()
+      try yamlStorage.load().print()
     }
 
     group.command("write") {
       let input = readAllLines().joined()
-      try yamlFile.save(input)
+      try yamlStorage.save(input)
+    }
+  }
+
+  root.group("json") { group in
+    var jsonStorage: StringStorage {
+      return stringStorage(atPath: ".todo.json")
+    }
+
+    group.command("read") {
+      try jsonStorage.load().print()
+    }
+
+    group.command("write") {
+      let input = readAllLines().joined()
+      try jsonStorage.save(input)
     }
   }
 }.run()

@@ -28,8 +28,14 @@ public func taskStorage() -> TaskStorage {
   return TaskStorage(atPath: ".todo", transcoder: .taskToYaml + .stringToData)
 }
 
-public typealias YamlStorage = Storage<String>
+public typealias TaskJSONStorage = Storage<[Task]>
 
-public func yamlStorage(atPath path: String) -> YamlStorage {
-  return YamlStorage(atPath: path, transcoder: .stringToData)
+public func taskJSONStorage() -> TaskJSONStorage {
+  return TaskJSONStorage(atPath: ".todo.json", transcoder: .taskToJson + .jsonToData)
+}
+
+public typealias StringStorage = Storage<String>
+
+public func stringStorage(atPath path: String) -> StringStorage {
+  return StringStorage(atPath: path, transcoder: .stringToData)
 }

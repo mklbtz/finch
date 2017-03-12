@@ -56,3 +56,21 @@ extension Transcoder {
                  decoder: { try Yams.load(yaml: $0).represented() })
   }
 }
+
+extension Transcoder {
+  public static var taskToJson: Transcoder<[Task], [[String:Any]]> {
+    return .init(encoder: { $0.map { $0.jsonObject() } } as ([Task]) -> [[String:Any]],
+                 decoder: { $0.flatMap(Task.init(from:)) })
+  }
+
+  public static var jsonToData: Transcoder<[[String:Any]], Data> {
+    return .init(encoder: { try JSONSerialization.data(withJSONObject: $0) },
+                 decoder: {
+                  if let object = try JSONSerialization.jsonObject(with: $0) as? [[String:Any]] {
+                    return object
+                  } else {
+                    throw "Data was not in expected format"
+                  }
+                })
+  }
+}
