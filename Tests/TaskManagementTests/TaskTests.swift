@@ -1,6 +1,5 @@
 import XCTest
 import TaskManagement
-import Yams
 
 class TaskTests: XCTestCase {
   func testInit() {
@@ -10,16 +9,16 @@ class TaskTests: XCTestCase {
     XCTAssertEqual(task.done, false)
   }
 
-  func testRepresented() throws {
-    let node = try buildTask().represented()
-    XCTAssertEqual(0, node["id"]?.int)
-    XCTAssertEqual("default", node["title"]?.string)
-    XCTAssertEqual(false, node["done"]?.bool)
+  func testJsonObject() throws {
+    let node = try buildTask().jsonObject()
+    XCTAssertEqual(0, node["id"] as? Int)
+    XCTAssertEqual("default", node["title"] as? String)
+    XCTAssertEqual(false, node["done"] as? Bool)
   }
 
-  func testInitFromNode() throws {
-    let node = try ["id": 0, "title": "default", "done": false].represented()
-    let task = Task(from: node)
+  func testInitFromJson() throws {
+    let json = ["id": 0, "title": "default", "done": false] as [String : Any]
+    let task = Task(from: json)
     XCTAssertEqual(task, .some(buildTask()))
   }
 }
