@@ -69,18 +69,33 @@ DefaultableGroup {
     try taskJSONStorage().save(taskList)
   }
 
-  root.group("file") { group in
-    var yamlFile: YamlStorage {
-      return yamlStorage(atPath: ".todo")
+  root.group("yaml") { group in
+    var yamlStorage: StringStorage {
+      return stringStorage(atPath: ".todo")
     }
 
     group.command("read") {
-      try yamlFile.load().print()
+      try yamlStorage.load().print()
     }
 
     group.command("write") {
       let input = readAllLines().joined()
-      try yamlFile.save(input)
+      try yamlStorage.save(input)
+    }
+  }
+
+  root.group("json") { group in
+    var jsonStorage: StringStorage {
+      return stringStorage(atPath: ".todo.json")
+    }
+
+    group.command("read") {
+      try jsonStorage.load().print()
+    }
+
+    group.command("write") {
+      let input = readAllLines().joined()
+      try jsonStorage.save(input)
     }
   }
 }.run()
