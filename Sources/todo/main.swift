@@ -10,7 +10,7 @@ DefaultableGroup {
   let root = $0 as! DefaultableGroup
 
   root.defaultCommand {
-    let taskList = try taskStorage().load()
+    let taskList = try taskStorage().load().filter { !$0.done }
     for task in taskList {
       TaskFormatter(for: task).print()
     }
@@ -41,10 +41,10 @@ DefaultableGroup {
     TaskFormatter(for: task).print()
   }
 
-  root.command("ls") {
+  root.command("ls", Flag("all", flag: "a", description: "show all tasks")) { showAll in
     let taskList: [Task]
     do {
-      taskList = try taskStorage().load()
+      taskList = try taskStorage().load().filter { showAll || !$0.done }
     } catch File.Error.couldNotRead(_) {
       taskList = []
     }
