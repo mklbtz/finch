@@ -41,4 +41,3 @@ extension Array where Element: Stored {
     self[index] = task
   }
 }
-

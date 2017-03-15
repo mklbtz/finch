@@ -12,7 +12,7 @@ DefaultableGroup {
   root.defaultCommand {
     let taskList = try taskStorage().load().filter { !$0.done }
     for task in taskList {
-      TaskFormatter(for: task).print()
+      print(TaskFormatter(for: task))
     }
   }
   root.command("add") { (title: String) in
@@ -22,7 +22,7 @@ DefaultableGroup {
     let task = Task(id: id, title: title)
     taskList.append(task)
     try taskStorage().save(taskList)
-    TaskFormatter(for: task).print()
+    print(TaskFormatter(for: task))
   }
 
   root.command("rm") { (id: Int) in
@@ -30,14 +30,14 @@ DefaultableGroup {
     taskList = try taskStorage().load()
     let task = try taskList.remove(id: id)
     try taskStorage().save(taskList)
-    TaskFormatter(for: task).print()
+    print(TaskFormatter(for: task))
   }
 
   root.command("ls", Flag("all", flag: "a", description: "show all tasks")) { showAll in
     let taskList: [Task]
     taskList = try taskStorage().load().filter { showAll || !$0.done }
     for task in taskList {
-      TaskFormatter(for: task).print()
+      print(TaskFormatter(for: task))
     }
   }
 
@@ -46,7 +46,7 @@ DefaultableGroup {
     taskList = try taskStorage().load()
     try taskList.update(id: id) { task in
       task.done = true
-      TaskFormatter(for: task).print()
+      print(TaskFormatter(for: task))
     }
     try taskStorage().save(taskList)
   }

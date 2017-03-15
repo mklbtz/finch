@@ -9,10 +9,6 @@ public struct TaskFormatter {
 }
 
 extension TaskFormatter: CustomStringConvertible {
-  public func print() {
-    Swift.print(description)
-  }
-
   public var description: String {
     return padding + checkbox + id + title
   }
