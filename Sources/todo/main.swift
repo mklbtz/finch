@@ -70,7 +70,7 @@ DefaultableGroup {
 
   root.group("file") { group in
     var jsonStorage: StringStorage {
-      return stringStorage(atPath: ".todo.json")
+      return stringStorage(atPath: taskStorage().path)
     }
 
     group.command("read") {
