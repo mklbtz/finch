@@ -10,41 +10,32 @@ DefaultableGroup {
   let root = $0 as! DefaultableGroup
 
   root.defaultCommand {
-    let taskList = try taskStorage().load().filter { !$0.done }
-    taskList.forEach { print($0) }
+    try TaskManager().outstanding.forEach { print($0) }
   }
+
+  root.command("ls", Flag("all", flag: "a")) { showAll in
+    let manager = try TaskManager()
+    (showAll ? manager.all : manager.outstanding).forEach { print($0) }
+  }
+
   root.command("add") { (title: String) in
-    var taskList: [Task]
-    taskList = try taskStorage().load()
-    let id = taskList.nextId()
-    let task = Task(id: id, title: title)
-    taskList.append(task)
-    try taskStorage().save(taskList)
+    var manager = try TaskManager()
+    let task = try manager.add(title: title)
     print(task)
   }
 
   root.command("rm") { (id: Int) in
-    var taskList: [Task]
-    taskList = try taskStorage().load()
-    let task = try taskList.remove(id: id)
-    try taskStorage().save(taskList)
+    var manager = try TaskManager()
+    let task = try manager.remove(id: id)
     print(task)
   }
 
-  root.command("ls", Flag("all", flag: "a", description: "show all tasks")) { showAll in
-    let taskList: [Task]
-    taskList = try taskStorage().load().filter { showAll || !$0.done }
-    taskList.forEach { print($0) }
-  }
-
   root.command("done") { (id: Int) in
-    var taskList: [Task]
-    taskList = try taskStorage().load()
-    try taskList.update(id: id) { task in
+    var manager = try TaskManager()
+    try manager.update(id: id) { task in
       task.done = true
       print(task)
     }
-    try taskStorage().save(taskList)
   }
 
   root.group("file") { group in
