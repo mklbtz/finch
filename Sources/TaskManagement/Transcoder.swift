@@ -40,3 +40,17 @@ extension Transcoder {
                  })
   }
 }
+
+extension Transcoder {
+  public func around(encode wrapper: @escaping (() throws -> Output) throws -> Output) -> Transcoder<Input, Output> {
+    return .init(encoder: { input in
+      try wrapper { try self.encoder(input) }
+    }, decoder: self.decoder)
+  }
+
+  public func around(decode wrapper: @escaping (() throws -> Input) throws -> Input) -> Transcoder<Input, Output> {
+    return .init(encoder: self.encoder, decoder: { output in
+      try wrapper { try self.decoder(output) }
+    })
+  }
+}
