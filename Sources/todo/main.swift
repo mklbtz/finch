@@ -2,10 +2,6 @@ import Commander
 import Foundation
 import TaskManagement
 
-func readAllLines() -> AnyIterator<String> {
-  return AnyIterator { return readLine(strippingNewline: false) }
-}
-
 DefaultableGroup {
   let root = $0 as! DefaultableGroup
 
@@ -41,6 +37,10 @@ DefaultableGroup {
   root.group("file") { group in
     var jsonStorage: StringStorage {
       return stringStorage(atPath: taskStorage().path)
+    }
+
+    func readAllLines() -> AnyIterator<String> {
+      return AnyIterator { return readLine(strippingNewline: false) }
     }
 
     group.command("read") {
