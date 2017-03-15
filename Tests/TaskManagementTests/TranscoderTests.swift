@@ -11,23 +11,34 @@ class TranscoderTests: XCTestCase {
     XCTAssertEqual(try subject.decode(encoded), original)
   }
 
-  // TODO: Figure out how to compare [[String: Any]]
+  func testJsonToData() throws {
+    let subject = Transcoder<[[String:Any]], Data>.jsonToData
+    let original = [["key":"value"]]
+    let encoded = try JSONSerialization.data(withJSONObject: original)
 
-  // func testJsonToData() throws {
-  //   let subject = Transcoder<[[String:Any]], Data>.jsonToData
-  //   let original: [[String: Any]] = [["key":"value"]]
-  //   let encoded = JSONSerialization.data(withJSONObject: original)
+    XCTAssertEqual(try subject.encode(original), encoded)
 
-  //   XCTAssertEqual(try subject.encode(original), encoded)
-  //   XCTAssertEqual(try subject.decode(encoded), original)
-  // }
+    if let value = try subject.decode(encoded).first?["key"] as? String {
+      XCTAssertEqual(value, original.first?["key"])
+    }
+    else {
+      XCTFail("json was not decoded correctly")
+    }
+  }
 
-  // func testTaskToJson() throws {
-  //   let subject = Transcoder<[Task], [[String:Any]]>.taskToJson
-  //   let original = [buildTask()]
-  //   let encoded = original.flatMap { $0.jsonObject() }
+  func testTaskToJson() throws {
+    let subject = Transcoder<[Task], [[String:Any]]>.taskToJson
+    let original = [buildTask()]
+    let encoded = original.map { $0.jsonObject() }
 
-  //   XCTAssertEqual(try subject.encode(original), encoded)
-  //   XCTAssertEqual(try subject.decode(encoded), original)
-  // }
+    XCTAssertEqual(try subject.decode(encoded), original)
+
+    if let jsonObject = try subject.encode(original).first,
+       let task = Task(from: jsonObject) {
+        XCTAssertEqual(task, original.first)
+    }
+    else {
+      XCTFail("json was not encoded correctly")
+    }
+  }
 }
