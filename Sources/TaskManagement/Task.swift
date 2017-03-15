@@ -33,3 +33,18 @@ extension Task: Equatable {
     return lhs.id == rhs.id && lhs.title == rhs.title && lhs.done == rhs.done
   }
 }
+
+extension Task: CustomStringConvertible {
+  public var description: String {
+    return " \(marker) \(id). \(title)"
+  }
+
+  private var marker: String {
+    return done ? checkmark : whiteCircle
+  }
+
+  private var checkmark: String { return "✓" }
+  private var whiteCircle: String { return "◦" }
+  private var blackCircle: String { return "●" }
+}
+

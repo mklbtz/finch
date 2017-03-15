@@ -10,7 +10,7 @@ class TaskTests: XCTestCase {
   }
 
   func testJsonObject() throws {
-    let node = try buildTask().jsonObject()
+    let node = buildTask().jsonObject()
     XCTAssertEqual(0, node["id"] as? Int)
     XCTAssertEqual("default", node["title"] as? String)
     XCTAssertEqual(false, node["done"] as? Bool)
@@ -20,5 +20,13 @@ class TaskTests: XCTestCase {
     let json = ["id": 0, "title": "default", "done": false] as [String : Any]
     let task = Task(from: json)
     XCTAssertEqual(task, .some(buildTask()))
+  }
+
+  func testDescription() {
+    var description = buildTask().description
+    XCTAssertEqual(description, " ◦ 0. default")
+
+    description = buildTask(done: true).description
+    XCTAssertEqual(description, " ✓ 0. default")
   }
 }
