@@ -54,7 +54,7 @@ extension Storage {
 public typealias TaskStorage = Storage<[Task]>
 
 public func taskStorage() -> TaskStorage {
-  return TaskStorage(atPath: ".todo.json", transcoder: .taskToJson + .jsonToData)
+  return TaskStorage(atPath: ".todo", default: [], transcoder: .taskToJson + .jsonToData)
 }
 
 public typealias StringStorage = Storage<String>
