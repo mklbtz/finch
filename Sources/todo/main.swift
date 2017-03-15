@@ -17,11 +17,7 @@ DefaultableGroup {
   }
   root.command("add") { (title: String) in
     var taskList: [Task]
-    do {
-      taskList = try taskStorage().load()
-    } catch File.Error.couldNotRead(_) {
-      taskList = []
-    }
+    taskList = try taskStorage().load()
     let id = taskList.nextId()
     let task = Task(id: id, title: title)
     taskList.append(task)
@@ -31,11 +27,7 @@ DefaultableGroup {
 
   root.command("rm") { (id: Int) in
     var taskList: [Task]
-    do {
-      taskList = try taskStorage().load()
-    } catch File.Error.couldNotRead(_) {
-      taskList = []
-    }
+    taskList = try taskStorage().load()
     let task = try taskList.remove(id: id)
     try taskStorage().save(taskList)
     TaskFormatter(for: task).print()
@@ -43,12 +35,7 @@ DefaultableGroup {
 
   root.command("ls", Flag("all", flag: "a", description: "show all tasks")) { showAll in
     let taskList: [Task]
-    do {
-      taskList = try taskStorage().load().filter { showAll || !$0.done }
-    } catch File.Error.couldNotRead(_) {
-      taskList = []
-    }
-
+    taskList = try taskStorage().load().filter { showAll || !$0.done }
     for task in taskList {
       TaskFormatter(for: task).print()
     }
@@ -56,11 +43,7 @@ DefaultableGroup {
 
   root.command("done") { (id: Int) in
     var taskList: [Task]
-    do {
-      taskList = try taskStorage().load()
-    } catch File.Error.couldNotRead(_) {
-      taskList = []
-    }
+    taskList = try taskStorage().load()
     try taskList.update(id: id) { task in
       task.done = true
       TaskFormatter(for: task).print()
