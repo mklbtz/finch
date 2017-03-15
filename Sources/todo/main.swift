@@ -35,8 +35,8 @@ DefaultableGroup {
   }
 
   root.group("file") { group in
-    var jsonStorage: StringStorage {
-      return stringStorage(atPath: taskStorage().path)
+    var jsonStorage: Storage<String> {
+      return StringStorage(atPath: TaskStorage().path)
     }
 
     func readAllLines() -> AnyIterator<String> {

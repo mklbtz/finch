@@ -1,6 +1,6 @@
 public struct TaskManager {
   public private(set) var all: [Task]
-  private let storage = taskStorage()
+  private let storage = TaskStorage()
 
   public init() throws {
     self.all = try storage.load()
