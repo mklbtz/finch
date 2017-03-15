@@ -12,14 +12,25 @@ public struct Storage<Stored> {
 
 extension Storage {
   public func load() throws -> Stored {
-    return try transcoder.decode(file.load())
+    return try withNiceErrors { try transcoder.decode(file.load()) }
   }
 
   public func save(_ stored: Stored) throws {
-    return try file.save(transcoder.encode(stored))
+    return try withNiceErrors { try file.save(transcoder.encode(stored)) }
   }
 
-  var file: File { return File(atPath: path) }
+  var file: File {
+    return File(atPath: path)
+  }
+
+  private func withNiceErrors<A>(_ run: () throws -> A) rethrows -> A {
+    do {
+      return try run()
+    }
+    catch let error as NSError {
+      throw error.localizedDescription
+    }
+  }
 }
 
 public typealias TaskStorage = Storage<[Task]>

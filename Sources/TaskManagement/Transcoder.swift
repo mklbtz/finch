@@ -32,11 +32,11 @@ extension Transcoder {
   public static var jsonToData: Transcoder<[[String:Any]], Data> {
     return .init(encoder: { try JSONSerialization.data(withJSONObject: $0) },
                  decoder: {
-                  if let object = try JSONSerialization.jsonObject(with: $0) as? [[String:Any]] {
-                    return object
-                  } else {
-                    throw "Data was not in expected format"
-                  }
-                })
+                   if let object = try JSONSerialization.jsonObject(with: $0) as? [[String:Any]] {
+                     return object
+                   } else {
+                     throw "The data can't be used because it isn't an array of JSON objects"
+                   }
+                 })
   }
 }
