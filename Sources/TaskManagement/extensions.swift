@@ -17,4 +17,12 @@ extension Array {
       self[index] = try transforming(self[index])
     }
   }
+
+  public mutating func remove(at indices: [Index]) -> [Element] {
+    var removed: [Element] = []
+    for index in indices {
+      removed.append(remove(at: index))
+    }
+    return removed
+  }
 }
