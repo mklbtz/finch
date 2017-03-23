@@ -30,11 +30,27 @@ DefaultGroup {
     print(task)
   }
 
-  root.command("do", description: "Mark a task as complete") { (id: Int) in
+  root.command(
+    "do",
+    Int.Args.ids(),
+    Flag.all("Mark all tasks as done"),
+    description: "Complete tasks by ID")
+  { (ids, markAll) in
     var manager = try TaskManager()
-    try manager.update(id: id) { task in
+    let update: ((Task) -> (Task)) throws -> ()
+
+    if markAll {
+      update = { try manager.update(by: $0) }
+    }
+    else {
+      update = { try manager.update(ids: ids, by: $0) }
+    }
+
+    try update { task in
+      var task = task
       task.done = true
       print(task)
+      return task
     }
   }
 
