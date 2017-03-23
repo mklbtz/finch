@@ -9,7 +9,11 @@ DefaultGroup {
     try TaskManager().outstanding.forEach { print($0) }
   }
 
-  root.command("ls", Flag.all("Include completed tasks"), description: "List tasks") { showAll in
+  root.command(
+    "ls",
+    Flag.all("Include done tasks"),
+    description: "List tasks")
+  { showAll in
     let manager = try TaskManager()
     (showAll ? manager.all : manager.outstanding).forEach { print($0) }
   }
