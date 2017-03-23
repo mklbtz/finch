@@ -41,6 +41,12 @@ public struct TaskManager {
     try storage.save(all)
   }
 
+  @discardableResult
+  public mutating func update(by changing: (Task) -> (Task)) throws {
+    all.transform(by: changing)
+    try storage.save(all)
+  }
+
   private func nextId() -> Int {
     let max = all.max(by: { $0.id < $1.id })?.id ?? 0
     return 1 + max
