@@ -27,8 +27,16 @@ public struct TaskManager {
   }
 
   @discardableResult
-  public mutating func remove(id: Int) throws -> Task {
-    let removed = try all.remove(at: index(id: id))
+  public mutating func removeAll() throws -> [Task] {
+    let removed = all
+    all = []
+    try storage.save(all)
+    return removed
+  }
+
+  @discardableResult
+  public mutating func remove(ids: [Int]) throws -> [Task] {
+    let removed = all.remove(at: indices(ids: ids))
     try storage.save(all)
     return removed
   }
