@@ -20,9 +20,18 @@ extension Array {
 
   public mutating func remove(at indices: [Index]) -> [Element] {
     var removed: [Element] = []
-    for index in indices {
-      removed.append(remove(at: index))
+    var kept: [Element] = []
+
+    for index in 0..<count {
+      if indices.contains(index) {
+        removed.append(self[index])
+      }
+      else {
+        kept.append(self[index])
+      }
     }
+
+    self = kept
     return removed
   }
 }
