@@ -3,3 +3,18 @@ extension String: Error {
     Swift.print(self, terminator: terminator)
   }
 }
+
+extension Array {
+  public mutating func transform(by transforming: (Element) throws -> Element) rethrows {
+    for index in 0..<count {
+      self[index] = try transforming(self[index])
+    }
+  }
+
+  public mutating func transform<S: Sequence>(at indices: S, by transforming: (Element) throws -> Element) rethrows
+  where Index == S.Iterator.Element {
+    for index in indices {
+      self[index] = try transforming(self[index])
+    }
+  }
+}
