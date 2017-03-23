@@ -24,10 +24,23 @@ DefaultGroup {
     print(task)
   }
 
-  root.command("rm", description: "Remove a task by ID") { (id: Int) in
+  root.command(
+    "rm",
+    Int.Args.ids(),
+    Flag.all("Remove all tasks"),
+    description: "Remove tasks by ID")
+  { (ids, removeAll) in
     var manager = try TaskManager()
-    let task = try manager.remove(id: id)
-    print(task)
+    let tasks: [Task]
+
+    if removeAll {
+      tasks = try manager.removeAll()
+    }
+    else {
+      tasks = try manager.remove(ids: ids)
+    }
+
+    tasks.forEach { print($0) }
   }
 
   root.command(
