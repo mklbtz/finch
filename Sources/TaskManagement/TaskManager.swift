@@ -34,13 +34,11 @@ public struct TaskManager {
   }
 
   @discardableResult
-  public mutating func update(id: Int, change: (inout Task) -> ()) throws -> Task {
-    let index = try self.index(id: id)
-    var task = all[index]
-    change(&task)
-    all[index] = task
+  public mutating func update(ids: [Int], by changing: (Task) -> (Task)) throws {
+    guard !ids.isEmpty else { return }
+    let indices = self.indices(ids: ids)
+    all.transform(at: indices, by: changing)
     try storage.save(all)
-    return task
   }
 
   private func nextId() -> Int {
@@ -49,10 +47,21 @@ public struct TaskManager {
   }
 
   private func index(id: Int) throws -> Int {
-      if let index = all.index(where: { id == $0.id }) {
-        return index
-      } else {
-        throw "Could not find id: \(id)."
+    if let index = all.index(where: { id == $0.id }) {
+      return index
+    }
+    else {
+      throw "Could not find id: \(id)."
+    }
+  }
+
+  private func indices(ids: [Int]) -> [Int] {
+    var indices: [Int] = []
+    for (index, task) in all.enumerated() {
+      if ids.contains(task.id) {
+        indices.append(index)
       }
     }
+    return indices
+  }
 }
