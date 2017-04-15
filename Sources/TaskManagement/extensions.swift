@@ -4,33 +4,36 @@ extension String: Error {
   }
 }
 
-extension Array {
-  public mutating func transform(by transforming: (Element) throws -> Element) rethrows {
-    for index in 0..<count {
-      self[index] = try transforming(self[index])
+extension MutableCollection {
+  public mutating func transform(by transforming: (Iterator.Element) throws -> Iterator.Element) rethrows {
+    var i = startIndex
+    while i != endIndex {
+      self[i] = try transforming(self[i])
+      i = index(after: i)
     }
   }
 
-  public mutating func transform<S: Sequence>(at indices: S, by transforming: (Element) throws -> Element) rethrows
+  public mutating func transform<S: Sequence>(at indices: S, by transforming: (Iterator.Element) throws -> Iterator.Element) rethrows
   where Index == S.Iterator.Element {
     for index in indices {
       self[index] = try transforming(self[index])
     }
   }
+}
 
-  public mutating func remove(at indices: [Index]) -> [Element] {
+extension Array {
+  public mutating func remove<C: Collection>(at selected: C) -> Array
+  where C.Iterator.Element == Index {
     var removed: [Element] = []
     var kept: [Element] = []
-
-    for index in 0..<count {
-      if indices.contains(index) {
-        removed.append(self[index])
+    for (i, e) in self.enumerated() {
+      if selected.contains(i) {
+        removed.append(e)
       }
       else {
-        kept.append(self[index])
+        kept.append(e)
       }
     }
-
     self = kept
     return removed
   }
