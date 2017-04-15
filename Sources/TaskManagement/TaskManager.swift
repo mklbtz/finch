@@ -33,7 +33,7 @@ public struct TaskManager {
   @discardableResult
   public mutating func removeAll() throws -> [Task] {
     let removed = all
-    all = []
+    all.removeAll()
     try storage.save(all)
     return removed
   }
@@ -45,7 +45,7 @@ public struct TaskManager {
     return removed
   }
 
-  @discardableResult
+  
   public mutating func update(ids: [Int], by changing: (Task) -> (Task)) throws {
     guard !ids.isEmpty else { return }
     let indices = self.indices(ids: ids)
@@ -53,7 +53,6 @@ public struct TaskManager {
     try storage.save(all)
   }
 
-  @discardableResult
   public mutating func update(by changing: (Task) -> (Task)) throws {
     all.transform(by: changing)
     try storage.save(all)
