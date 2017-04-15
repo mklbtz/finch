@@ -18,6 +18,10 @@ public struct TaskManager {
     return try all[index(id: id)]
   }
 
+  public func find(ids: [Int]) -> [Task] {
+    return all.filter { ids.contains($0.id) }
+  }
+
   public mutating func add(title: String) throws -> Task {
     let id = nextId()
     let task = Task(id: id, title: title)
