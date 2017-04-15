@@ -67,6 +67,20 @@ DefaultGroup {
     }
   }
 
+  root.command(
+    "edit",
+    Int.Arg.id(),
+    String.Arg.title(),
+    description: "Change the title of a task.")
+  { (id, title) in
+    var manager = try TaskManager()
+    try manager.update(ids: [id]) {
+      let updated = $0.updating(title: title)
+      print(updated)
+      return updated
+    }
+  }
+
   // Subgroup for accessing file contents directly.
   root.group("file") { group in
     var jsonStorage: Storage<String> {

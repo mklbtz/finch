@@ -10,6 +10,10 @@ extension Argument {
   public static func id() -> Argument<T> {
     return .init("id", description: "A task ID number")
   }
+
+  public static func title() -> Argument<T> {
+    return .init("title", description: "A title for the task")
+  }
 }
 
 extension VariadicArgument {
