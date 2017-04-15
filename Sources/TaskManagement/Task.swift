@@ -8,6 +8,10 @@ public struct Task {
     self.title = title
     self.done = done
   }
+
+  public func updating(title: String? = nil, done: Bool? = nil) -> Task {
+    return Task(id: id, title: title ?? self.title, done: done ?? self.done)
+  }
 }
 
 extension Task {
