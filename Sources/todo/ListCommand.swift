@@ -22,8 +22,8 @@ struct ListCommand: CommandProtocol {
       return Options.init <*> m <| all
     }
 
-    static var all: Option<Bool> {
-      return Option(key: "all", defaultValue: false, usage: "Include completed tasks")
+    static var all: Switch {
+      return Switch(flag: "a", key: "all", usage: "Include completed tasks")
     }
   }
 }
