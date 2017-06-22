@@ -28,8 +28,7 @@ struct RemoveCommand: CommandProtocol {
     let removeAll: Bool
 
     static func evaluate(_ m: CommandMode) -> Result<Options, CommandantError<String>> {
-      let create = curry(Options.init)
-      return create
+      return curry(Options.init)
         <*> m <| Argument<[Int]>(usage: "A list of task IDs")
         <*> m <| Switch(flag: "a", key: "all", usage: "Remove all tasks")
     }
