@@ -19,11 +19,8 @@ struct AddCommand: CommandProtocol {
     let title: String
 
     static func evaluate(_ m: CommandMode) -> Result<Options, CommandantError<String>> {
-      return Options.init <*> m <|* title
-    }
-
-    static var title: Argument<String> {
-      return .init(usage: "The title for the new task")
+      return Options.init
+        <*> m <|* Argument<String>(usage: "The title for the new task")
     }
   }
 }

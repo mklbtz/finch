@@ -19,11 +19,8 @@ struct ListCommand: CommandProtocol {
     let showAll: Bool
 
     static func evaluate(_ m: CommandMode) -> Result<Options, CommandantError<String>> {
-      return Options.init <*> m <| all
-    }
-
-    static var all: Switch {
-      return Switch(flag: "a", key: "all", usage: "Include completed tasks")
+      return Options.init
+        <*> m <| Switch(flag: "a", key: "all", usage: "Include completed tasks")
     }
   }
 }
