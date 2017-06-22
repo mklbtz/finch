@@ -10,6 +10,7 @@ commands.register(RemoveCommand())
 commands.register(DoCommand())
 commands.register(EditCommand())
 commands.register(FileCommand())
+commands.register(HelpCommand(registry: commands))
 
 commands.main(defaultVerb: ListCommand().verb) { error in
   print(error)
