@@ -9,11 +9,16 @@ struct AddCommand: CommandProtocol {
 
   func run(_ options: Options) -> Result<Void, String> {
     return Result {
-      guard !options.title.isEmpty
-        else { throw "Provide a non-empty title for the task" }
+      try validateTitle(options.title)
       var manager = try TaskManager()
       let task = try manager.add(title: options.title)
       print(task)
+    }
+  }
+
+  private func validateTitle(_ title: String) throws -> Void {
+    guard !title.isEmpty else {
+      throw "Provide a non-empty title for the task"
     }
   }
 
