@@ -5,6 +5,7 @@ let package = Package(
   name: "todo",
   products: [
     .executable(name: "todo", targets: ["todo"]),
+    .executable(name: "todo-file", targets: ["todo-file"]),
     .library(name: "TaskManagement", targets: ["TaskManagement"])
   ],
   dependencies: [
@@ -12,6 +13,7 @@ let package = Package(
   ],
   targets: [
     .target(name: "todo", dependencies: ["TaskManagement", "Commandant"]),
+    .target(name: "todo-file", dependencies: ["TaskManagement", "Commandant"]),
     .target(name: "TaskManagement"),
   ],
   swiftLanguageVersions: [3, 4]
