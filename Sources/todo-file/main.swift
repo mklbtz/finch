@@ -1,8 +1,18 @@
-//
-//  main.swift
-//  todo
-//
-//  Created by Michael Bates on 6/22/17.
-//
+import Commandant
+import TaskManagement
 
-import Foundation
+var jsonStorage: Storage<String> {
+  return StringStorage(atPath: TaskStorage().path)
+}
+
+let commands = CommandRegistry<String>()
+
+commands.register(ReadCommand())
+commands.register(WriteCommand())
+commands.register(PathCommand())
+commands.register(HelpCommand(registry: commands))
+
+commands.main(defaultVerb: ReadCommand().verb) { error in
+  print(error)
+}
+
