@@ -12,7 +12,7 @@ commands.register(WriteCommand())
 commands.register(PathCommand())
 commands.register(HelpCommand(registry: commands))
 
-commands.main(defaultVerb: ReadCommand().verb) { error in
+commands.main(defaultVerb: "help") { error in
   print(error)
 }
 
