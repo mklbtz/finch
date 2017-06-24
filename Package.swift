@@ -2,18 +2,18 @@
 import PackageDescription
 
 let package = Package(
-  name: "todo",
+  name: "Finch",
   products: [
-    .executable(name: "todo", targets: ["todo"]),
-    .executable(name: "todo-file", targets: ["todo-file"]),
+    .executable(name: "finch", targets: ["finch"]),
+    .executable(name: "finch-file", targets: ["finch-file"]),
     .library(name: "TaskManagement", targets: ["TaskManagement"])
   ],
   dependencies: [
     .package(url: "https://github.com/Carthage/Commandant.git", .branch("master")),
   ],
   targets: [
-    .target(name: "todo", dependencies: ["TaskManagement", "Commandant"]),
-    .target(name: "todo-file", dependencies: ["TaskManagement", "Commandant"]),
+    .target(name: "finch", dependencies: ["TaskManagement", "Commandant"]),
+    .target(name: "finch-file", dependencies: ["TaskManagement", "Commandant"]),
     .target(name: "TaskManagement"),
   ],
   swiftLanguageVersions: [3, 4]
