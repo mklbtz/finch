@@ -1,8 +1,8 @@
 import Commandant
 import TaskManagement
 
-var jsonStorage: Storage<String> {
-  return StringStorage(atPath: TaskStorage().path)
+func FileStorage() -> Storage<String> {
+  return StringStorage()
 }
 
 let commands = CommandRegistry<String>()
