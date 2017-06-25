@@ -19,36 +19,9 @@ public func + <A,B,C>(lhs: Transcoder<A,B>, rhs: Transcoder<B,C>) -> Transcoder<
 }
 
 extension Transcoder {
-  public static var taskToData: Transcoder<[Task], Data> {
-    return .init(encoder: JSONEncoder(), decoder: JSONDecoder())
-  }
-
   public static var stringToData: Transcoder<String, Data> {
     return .init(encoder: { $0.data(using: .utf8) ?? Data() },
                  decoder: { String(data: $0, encoding: .utf8) ?? "" })
-  }
-
-  public static var taskToJson: Transcoder<[Task], [[String:Any]]> {
-    return .init(encoder: { $0.map { $0.jsonObject() } } as ([Task]) -> [[String:Any]],
-                 decoder: { $0.flatMap(Task.init(from:)) })
-  }
-
-  public static var jsonToData: Transcoder<[[String:Any]], Data> {
-    return .init(encoder: JSONEncoder(), decoder: JSONDecoder())
-  }
-}
-
-extension Transcoder {
-  public func around(encode wrapper: @escaping (() throws -> Output) throws -> Output) -> Transcoder<Input, Output> {
-    return .init(encoder: { input in
-      try wrapper { try self.encoder(input) }
-    }, decoder: self.decoder)
-  }
-
-  public func around(decode wrapper: @escaping (() throws -> Input) throws -> Input) -> Transcoder<Input, Output> {
-    return .init(encoder: self.encoder, decoder: { output in
-      try wrapper { try self.decoder(output) }
-    })
   }
 }
 
