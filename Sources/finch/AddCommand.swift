@@ -6,11 +6,16 @@ import Result
 struct AddCommand: CommandProtocol {
   let verb = "add"
   let function = "Create a new task"
+  var manager: () throws -> TaskManager
+
+  init(manager: @autoclosure @escaping () throws -> TaskManager) {
+    self.manager = manager
+  }
 
   func run(_ options: Options) -> Result<Void, String> {
     return Result {
       try validateTitle(options.title)
-      var manager = try TaskManager()
+      var manager = try self.manager()
       let task = try manager.add(title: options.title)
       print(task)
     }
