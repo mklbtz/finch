@@ -1,4 +1,6 @@
-public struct Task {
+import Foundation
+
+public struct Task: Codable {
   public let id: Int
   public var title: String
   public var done: Bool = false
@@ -11,24 +13,6 @@ public struct Task {
 
   public func updating(title: String? = nil, done: Bool? = nil) -> Task {
     return Task(id: id, title: title ?? self.title, done: done ?? self.done)
-  }
-}
-
-extension Task {
-  public func jsonObject() -> [String:Any] {
-    return [
-      "id": id,
-      "title": title,
-      "done": done
-    ]
-  }
-
-  public init?(from json: [String:Any]) {
-    guard let id = json["id"] as? Int,
-          let title = json["title"] as? String,
-          let done = json["done"] as? Bool
-    else { return nil }
-    self.init(id: id, title: title, done: done)
   }
 }
 

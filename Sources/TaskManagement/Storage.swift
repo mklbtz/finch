@@ -51,12 +51,16 @@ extension Storage {
   }
 }
 
-// public typealias TaskStorage = Storage<[Task]>
-
-public func TaskStorage() -> Storage<[Task]> {
-  return Storage<[Task]>(atPath: ".todo", default: [], transcoder: .taskToJson + .jsonToData)
+extension Storage where Stored == [Task] {
+  public static var defaultPath: String {
+    return ".todo"
+  }
 }
 
-public func StringStorage(atPath path: String) -> Storage<String> {
-  return Storage<String>(atPath: path, transcoder: .stringToData)
+public func TaskStorage(atPath path: String = Storage<[Task]>.defaultPath) -> Storage<[Task]> {
+  return .init(atPath: path, default: [], transcoder: JSONTranscoder())
+}
+
+public func StringStorage(atPath path: String = Storage<[Task]>.defaultPath) -> Storage<String> {
+  return .init(atPath: path, transcoder: StringTranscoder())
 }

@@ -8,7 +8,7 @@ struct PathCommand: CommandProtocol {
   let function = "Print path to task storage file"
 
   func run(_ options: Options) -> Result<Void, String> {
-    print(jsonStorage.path)
+    print(FileStorage().path)
     return .success(())
   }
 }

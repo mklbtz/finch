@@ -10,7 +10,7 @@ struct WriteCommand: CommandProtocol {
   func run(_ options: Options) -> Result<Void, String> {
     return Result {
       let input = readAllLines().joined(separator: "\n")
-      try jsonStorage.save(input)
+      try FileStorage().save(input)
     }
   }
 

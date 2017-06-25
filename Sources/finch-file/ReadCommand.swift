@@ -9,7 +9,7 @@ struct ReadCommand: CommandProtocol {
 
   func run(_ options: Options) -> Result<Void, String> {
     return Result {
-      try jsonStorage.load().print()
+      try FileStorage().load().print()
     }
   }
 }
