@@ -71,4 +71,12 @@ extension Transcoder where Input: Codable, Output == Data {
     self.encoder = encoder.encode
     self.decoder = { try decoder.decode(Input.self, from: $0) }
   }
+
+  public static var codableToJSON: Transcoder<Input, Data> {
+    return .init(encoder: JSONEncoder(), decoder: JSONDecoder())
+  }
+
+  public static var codableToPropertyList: Transcoder<Input, Data> {
+    return .init(encoder: PropertyListEncoder(), decoder: PropertyListDecoder())
+  }
 }
