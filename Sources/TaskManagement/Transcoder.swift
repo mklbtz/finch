@@ -19,6 +19,10 @@ public func + <A,B,C>(lhs: Transcoder<A,B>, rhs: Transcoder<B,C>) -> Transcoder<
 }
 
 extension Transcoder {
+  public static var taskToData: Transcoder<[Task], Data> {
+    return .init(encoder: JSONEncoder(), decoder: JSONDecoder())
+  }
+
   public static var stringToData: Transcoder<String, Data> {
     return .init(encoder: { $0.data(using: .utf8) ?? Data() },
                  decoder: { String(data: $0, encoding: .utf8) ?? "" })
@@ -30,14 +34,7 @@ extension Transcoder {
   }
 
   public static var jsonToData: Transcoder<[[String:Any]], Data> {
-    return .init(encoder: { try JSONSerialization.data(withJSONObject: $0) },
-                 decoder: {
-                   if let object = try JSONSerialization.jsonObject(with: $0) as? [[String:Any]] {
-                     return object
-                   } else {
-                     throw "The data can't be used because it isn't an array of JSON objects"
-                   }
-                 })
+    return .init(encoder: JSONEncoder(), decoder: JSONDecoder())
   }
 }
 
@@ -52,5 +49,26 @@ extension Transcoder {
     return .init(encoder: self.encoder, decoder: { output in
       try wrapper { try self.decoder(output) }
     })
+  }
+}
+
+protocol Encoder {
+  func encode<T>(_ value: T) throws -> Data where T : Encodable
+}
+
+protocol Decoder {
+  func decode<T>(_ type: T.Type, from data: Data) throws -> T where T : Decodable
+}
+
+extension JSONEncoder: Encoder {}
+extension JSONDecoder: Decoder {}
+extension PropertyListEncoder: Encoder {}
+extension PropertyListDecoder: Decoder {}
+
+extension Transcoder where Input: Codable, Output == Data {
+  /// It is an error to use different format types here.
+  init<E: Encoder, D: Decoder>(encoder: E, decoder: D) {
+    self.encoder = encoder.encode
+    self.decoder = { try decoder.decode(Input.self, from: $0) }
   }
 }
