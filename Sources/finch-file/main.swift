@@ -1,18 +1,13 @@
 import Commandant
 import TaskManagement
 
-func FileStorage() -> Storage<String> {
-  return StringStorage()
-}
-
 let commands = CommandRegistry<String>()
 
-commands.register(ReadCommand())
-commands.register(WriteCommand())
-commands.register(PathCommand())
+commands.register(ReadCommand(with: StringStorage()))
+commands.register(WriteCommand(with: StringStorage()))
+commands.register(PathCommand(with: StringStorage()))
 commands.register(HelpCommand(registry: commands))
 
 commands.main(defaultVerb: "help") { error in
   print(error)
 }
-

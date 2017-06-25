@@ -6,10 +6,15 @@ import Result
 struct DoCommand: CommandProtocol {
   let verb = "do"
   let function = "Complete tasks by ID"
+  var manager: () throws -> TaskManager
+
+  init(manager: @autoclosure @escaping () throws -> TaskManager) {
+    self.manager = manager
+  }
 
   func run(_ options: Options) -> Result<Void, String> {
     return Result {
-      var manager = try TaskManager()
+      var manager = try self.manager()
       let update: ((Task) -> (Task)) throws -> ()
 
       if options.markAll {

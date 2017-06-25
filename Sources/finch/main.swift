@@ -1,15 +1,16 @@
 import Commandant
 import Foundation
+import TaskManagement
 
 let commands = CommandRegistry<String>()
 
-commands.register(ListCommand())
-commands.register(AddCommand())
-commands.register(RemoveCommand())
-commands.register(DoCommand())
-commands.register(EditCommand())
+commands.register(ListCommand(manager: try TaskManager()))
+commands.register(AddCommand(manager: try TaskManager()))
+commands.register(RemoveCommand(manager: try TaskManager()))
+commands.register(DoCommand(manager: try TaskManager()))
+commands.register(EditCommand(manager: try TaskManager()))
 commands.register(HelpCommand(registry: commands))
 
-commands.main(defaultVerb: ListCommand().verb) { error in
+commands.main(defaultVerb: "ls") { error in
   print(error)
 }

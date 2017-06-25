@@ -6,10 +6,15 @@ import Result
 struct ListCommand: CommandProtocol {
   let verb = "ls"
   let function = "List outstanding tasks"
+  var manager: () throws -> TaskManager
+
+  init(manager: @autoclosure @escaping () throws -> TaskManager) {
+    self.manager = manager
+  }
 
   func run(_ options: Options) -> Result<Void, String> {
     return Result {
-      let manager = try TaskManager()
+      let manager = try self.manager()
       let tasks = options.showAll ? manager.all : manager.outstanding
       tasks.forEach { print($0) }
     }

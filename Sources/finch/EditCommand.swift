@@ -6,10 +6,15 @@ import Result
 struct EditCommand: CommandProtocol {
   let verb = "edit"
   let function = "Change the title of a task."
+  var manager: () throws -> TaskManager
+
+  init(manager: @autoclosure @escaping () throws -> TaskManager) {
+    self.manager = manager
+  }
 
   func run(_ options: Options) -> Result<Void, String> {
     return Result {
-      var manager = try TaskManager()
+      var manager = try self.manager()
       try manager.update(ids: [options.id]) {
         let updated = $0.updating(title: options.title)
         print(updated)
