@@ -52,9 +52,9 @@ extension Storage {
 }
 
 public func TaskStorage() -> Storage<[Task]> {
-  return .init(atPath: ".todo", default: [], transcoder: .codableToJSON)
+  return .init(atPath: ".todo", default: [], transcoder: JSONTranscoder())
 }
 
 public func StringStorage(atPath path: String) -> Storage<String> {
-  return .init(atPath: path, transcoder: .stringToData)
+  return .init(atPath: path, transcoder: StringTranscoder())
 }

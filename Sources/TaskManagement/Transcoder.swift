@@ -18,13 +18,6 @@ public func + <A,B,C>(lhs: Transcoder<A,B>, rhs: Transcoder<B,C>) -> Transcoder<
                decoder: { (c: C) -> A in try lhs.decode(rhs.decode(c)) })
 }
 
-extension Transcoder {
-  public static var stringToData: Transcoder<String, Data> {
-    return .init(encoder: { $0.data(using: .utf8) ?? Data() },
-                 decoder: { String(data: $0, encoding: .utf8) ?? "" })
-  }
-}
-
 protocol Encoder {
   func encode<T>(_ value: T) throws -> Data where T : Encodable
 }
@@ -44,12 +37,17 @@ extension Transcoder where Input: Codable, Output == Data {
     self.encoder = encoder.encode
     self.decoder = { try decoder.decode(Input.self, from: $0) }
   }
+}
 
-  public static var codableToJSON: Transcoder<Input, Data> {
-    return .init(encoder: JSONEncoder(), decoder: JSONDecoder())
-  }
+public func JSONTranscoder<C>() -> Transcoder<C, Data> where C: Codable {
+  return .init(encoder: JSONEncoder(), decoder: JSONDecoder())
+}
 
-  public static var codableToPropertyList: Transcoder<Input, Data> {
-    return .init(encoder: PropertyListEncoder(), decoder: PropertyListDecoder())
-  }
+public func PropertyListTranscoder<C>() -> Transcoder<C, Data> where C: Codable {
+  return .init(encoder: PropertyListEncoder(), decoder: PropertyListDecoder())
+}
+
+public func StringTranscoder() -> Transcoder<String, Data> {
+  return .init(encoder: { $0.data(using: .utf8) ?? Data() },
+               decoder: { String(data: $0, encoding: .utf8) ?? "" })
 }
