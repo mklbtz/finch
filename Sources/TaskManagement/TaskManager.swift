@@ -44,7 +44,6 @@ public struct TaskManager {
     try storage.save(all)
     return removed
   }
-
   
   public mutating func update(ids: [Int], by changing: (Task) -> (Task)) throws {
     guard !ids.isEmpty else { return }

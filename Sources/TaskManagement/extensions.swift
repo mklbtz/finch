@@ -21,20 +21,15 @@ extension MutableCollection {
   }
 }
 
-extension Array {
-  public mutating func remove<C: Collection>(at selected: C) -> Array
-  where C.Iterator.Element == Index {
-    var removed: [Element] = []
-    var kept: [Element] = []
-    for (i, e) in self.enumerated() {
-      if selected.contains(i) {
-        removed.append(e)
+extension RangeReplaceableCollection {
+  public mutating func remove<C: RandomAccessCollection>(at indices: C) -> Self
+    where C.Iterator.Element == Index {
+      let indices = indices.sorted(by: >)
+      var removed = Self()
+      for index in indices {
+        let element = remove(at: index)
+        removed.append(element)
       }
-      else {
-        kept.append(e)
-      }
-    }
-    self = kept
-    return removed
+      return removed
   }
 }
