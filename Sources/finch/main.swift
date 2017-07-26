@@ -8,6 +8,7 @@ commands.register(ListCommand(manager: try TaskManager()))
 commands.register(AddCommand(manager: try TaskManager()))
 commands.register(RemoveCommand(manager: try TaskManager()))
 commands.register(DoCommand(manager: try TaskManager()))
+commands.register(UndoCommand(manager: try TaskManager()))
 commands.register(EditCommand(manager: try TaskManager()))
 commands.register(HelpCommand(registry: commands))
 
