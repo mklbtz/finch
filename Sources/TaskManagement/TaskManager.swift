@@ -44,17 +44,21 @@ public struct TaskManager {
     try storage.save(all)
     return removed
   }
-  
-  public mutating func update(ids: [Int], by changing: (Task) -> (Task)) throws {
-    guard !ids.isEmpty else { return }
+
+  @discardableResult
+  public mutating func update(ids: [Int], by changing: (Task) -> (Task)) throws -> [Task] {
+    guard !ids.isEmpty else { return [] }
     let indices = self.indices(ids: ids)
     all.transform(at: indices, by: changing)
     try storage.save(all)
+    return all.filter { ids.contains($0.id) }
   }
 
-  public mutating func update(by changing: (Task) -> (Task)) throws {
+  @discardableResult
+  public mutating func update(by changing: (Task) -> (Task)) throws -> [Task] {
     all.transform(by: changing)
     try storage.save(all)
+    return all
   }
 
   private func nextId() -> Int {

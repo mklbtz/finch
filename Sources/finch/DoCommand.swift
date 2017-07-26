@@ -15,20 +15,16 @@ struct DoCommand: CommandProtocol {
   func run(_ options: Options) -> Result<Void, String> {
     return Result {
       var manager = try self.manager()
-      let update: ((Task) -> (Task)) throws -> ()
+      let update = { (task: Task) in
+        task.updating(done: true)
+      }
 
       if options.markAll {
-        update = { try manager.update(by: $0) }
-      }
-      else {
-        update = { try manager.update(ids: options.ids, by: $0) }
-      }
-
-      try update { task in
-        var task = task
-        task.done = true
-        print(task)
-        return task
+        try manager.update(by: update).forEach { print($0) }
+      } else {
+        try manager.update(ids: options.ids, by: update)
+        manager.all.filter { !$0.done || options.ids.contains($0.id) }
+                   .forEach { print($0) }
       }
     }
   }
