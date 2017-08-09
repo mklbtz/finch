@@ -30,6 +30,15 @@ public struct TaskManager {
     return task
   }
 
+  public mutating func upsert(_ task: Task) throws {
+    if let index = all.index(id: task.id) {
+      all[index] = task
+    } else {
+      all.append(task)
+    }
+    try storage.save(all)
+  }
+
   @discardableResult
   public mutating func removeAll() throws -> [Task] {
     let removed = all

@@ -59,3 +59,9 @@ extension Collection where Element == Task {
     return filter { ids.contains($0.id) }
   }
 }
+
+extension BidirectionalCollection where Element == Task {
+  public func sorted() -> [Task] {
+    return sorted { $0.id < $1.id }
+  }
+}

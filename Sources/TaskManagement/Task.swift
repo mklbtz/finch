@@ -1,7 +1,7 @@
 import Foundation
 
 public struct Task: Codable {
-  public let id: Int
+  public var id: Int
   public var title: String
   public var done: Bool = false
 
