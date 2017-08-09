@@ -5,7 +5,7 @@ extension String: Error {
 }
 
 extension MutableCollection {
-  public mutating func transform(by transforming: (Iterator.Element) throws -> Iterator.Element) rethrows {
+  public mutating func transform(by transforming: (Element) throws -> Element) rethrows {
     var i = startIndex
     while i != endIndex {
       self[i] = try transforming(self[i])
@@ -13,8 +13,8 @@ extension MutableCollection {
     }
   }
 
-  public mutating func transform<S: Sequence>(at indices: S, by transforming: (Iterator.Element) throws -> Iterator.Element) rethrows
-  where Index == S.Iterator.Element {
+  public mutating func transform<S: Sequence>(at indices: S, by transforming: (Element) throws -> Element) rethrows
+  where Index == S.Element {
     for index in indices {
       self[index] = try transforming(self[index])
     }
@@ -23,7 +23,7 @@ extension MutableCollection {
 
 extension RangeReplaceableCollection {
   public mutating func remove<C: RandomAccessCollection>(at indices: C) -> Self
-    where C.Iterator.Element == Index {
+    where C.Element == Index {
       let indices = indices.sorted(by: >)
       var removed = Self()
       for index in indices {
