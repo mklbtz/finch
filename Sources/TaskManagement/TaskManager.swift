@@ -67,12 +67,8 @@ public struct TaskManager {
   }
 
   private func indices(ids: [Int]) -> [Int] {
-    var indices: [Int] = []
-    for (index, task) in all.enumerated() {
-      if ids.contains(task.id) {
-        indices.append(index)
-      }
-    }
-    return indices
+    return all.enumerated()
+              .filter { _, task in ids.contains(task.id) }
+              .map { index, _ in index }
   }
 }
