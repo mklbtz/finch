@@ -66,15 +66,6 @@ public struct TaskManager {
     return 1 + max
   }
 
-  private func index(id: Int) throws -> Int {
-    if let index = all.index(where: { id == $0.id }) {
-      return index
-    }
-    else {
-      throw "Could not find id: \(id)."
-    }
-  }
-
   private func indices(ids: [Int]) -> [Int] {
     var indices: [Int] = []
     for (index, task) in all.enumerated() {
