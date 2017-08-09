@@ -33,3 +33,29 @@ extension RangeReplaceableCollection {
       return removed
   }
 }
+
+extension Sequence where Element == Task {
+  public func outstanding() -> [Element] {
+    return filter { !$0.done }
+  }
+
+  public func done() -> [Element] {
+    return filter { $0.done }
+  }
+}
+
+extension Collection where Element == Task {
+  public func index(id: Int) -> Index? {
+    return index(where: { id == $0.id })
+  }
+
+  public func find(id: Int) -> Task? {
+    guard let index = index(id: id)
+      else { return nil }
+    return self[index]
+  }
+
+  public func find(ids: [Int]) -> [Task] {
+    return filter { ids.contains($0.id) }
+  }
+}

@@ -7,19 +7,19 @@ public struct TaskManager {
   }
 
   public var outstanding: [Task] {
-    return all.filter { !$0.done }
+    return all.outstanding()
   }
 
   public var done: [Task] {
-    return all.filter { $0.done }
+    return all.done()
   }
 
-  public func find(id: Int) throws -> Task {
-    return try all[index(id: id)]
+  public func find(id: Int) -> Task? {
+    return all.find(id: id)
   }
 
   public func find(ids: [Int]) -> [Task] {
-    return all.filter { ids.contains($0.id) }
+    return all.find(ids: ids)
   }
 
   public mutating func add(title: String) throws -> Task {
