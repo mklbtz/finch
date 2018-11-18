@@ -42,3 +42,29 @@ Available commands:
    swap   Swap the IDs of two tasks.
    undo   Un-complete tasks by ID
 ```
+
+There are some commands to help with examining or modifying the `.todo` file directly.
+
+```
+> finch file help
+Available commands:
+
+   help    Display general or command-specific help
+   path    Print path to task storage file
+   read    Read task storage file
+   write   Write stdin to task storage file
+```
+
+## Installation
+The easiest way to install is with [Mint](https://github.com/yonaskolb/mint) 🌱
+```
+> mint install mklbtz/finch
+```
+
+Or you can manually clone the repo and build it with SwiftPM.
+```
+git clone https://github.com/mklbtz/finch
+cd finch
+swift build
+cp .build/debug/finch /usr/local/bin/
+```
